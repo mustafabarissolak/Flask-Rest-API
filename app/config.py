@@ -1,8 +1,8 @@
 # PostgreSQL Configuration
 class PostgresqlConfig:
-    postgresqlUserName = "postgres"
-    postgresqlPassword = "1234"
-    postgresqlDbName = "swagger"
+    postgresqlUserName = "your user name"
+    postgresqlPassword = "your password"
+    postgresqlDbName = "your database name "
     SQLALCHEMY_DATABASE_URI = f"postgresql://{postgresqlUserName}:{postgresqlPassword}@localhost/{postgresqlDbName}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
