@@ -2,6 +2,8 @@ from flask import request, jsonify
 from flask_restx import Resource, fields, Namespace
 from app import pdb
 from app.Models import CustomerDevice
+from app.Models.ModelsLogging import Logger
+
 
 # Veri modeli tanımı
 api_customer_device = Namespace(
@@ -20,12 +22,14 @@ customer_device_model = api_customer_device.model(
         ),
     },
 )
+log = Logger()
 
 
 @api_customer_device.route("/customer_devices")
 class CustomerDeviceList(Resource):
     def get(self):
         customer_devices = CustomerDevice.query.all()
+        log.log_crud(info="Get", table_name="Customer Devices ")
         return jsonify(
             [
                 {
@@ -50,6 +54,7 @@ class CustomerDeviceList(Resource):
         )
         pdb.session.add(new_device)
         pdb.session.commit()
+        log.log_crud(info="Post", table_name="Customer Devices ")
         return jsonify(
             {
                 "id": new_device.id,
@@ -65,6 +70,7 @@ class CustomerDeviceList(Resource):
 class CustomerDeviceResource(Resource):
     def get(self, id):
         device = CustomerDevice.query.get_or_404(id)
+        log.log_crud(info="Get", table_name=f"Customer Devices {id}")
         return jsonify(
             {
                 "id": device.id,
@@ -84,6 +90,7 @@ class CustomerDeviceResource(Resource):
         device.port = data["port"]
         device.ipHost = data["ipHost"]
         pdb.session.commit()
+        log.log_crud(info="Put", table_name=f"Customer Devices {id}")
         return jsonify(
             {
                 "id": device.id,
@@ -98,4 +105,5 @@ class CustomerDeviceResource(Resource):
         device = CustomerDevice.query.get_or_404(id)
         pdb.session.delete(device)
         pdb.session.commit()
+        log.log_crud(info="Delete", table_name=f"Customer Devices {id}")
         return "", 204

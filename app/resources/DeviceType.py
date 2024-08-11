@@ -2,6 +2,8 @@ from flask import request, jsonify
 from flask_restx import Resource, fields, Namespace
 from app import pdb
 from app.Models import DeviceType
+from app.Models.ModelsLogging import Logger
+
 
 api_device_type = Namespace(
     "Device Type", description="Operations related to Device Type"
@@ -17,11 +19,14 @@ device_type_model = api_device_type.model(
     },
 )
 
+log = Logger()
+
 
 @api_device_type.route("/device_types")
 class DeviceTypeList(Resource):
     def get(self):
         deviceTypes = DeviceType.query.all()
+        log.log_crud(info="Get", table_name="Device Type")
         return jsonify(
             [
                 {
@@ -44,6 +49,7 @@ class DeviceTypeList(Resource):
         )
         pdb.session.add(new_device_type)
         pdb.session.commit()
+        log.log_crud(info="Post", table_name="Device Type")
         return jsonify(
             {
                 "id": new_device_type.id,
@@ -59,6 +65,7 @@ class DeviceTypeList(Resource):
 class DeviceTypeResource(Resource):
     def get(self, id):
         device = DeviceType.query.get_or_404(id)
+        log.log_crud(info="Get", table_name="Device Type")
         return jsonify(
             {
                 "id": device.id,
@@ -76,6 +83,7 @@ class DeviceTypeResource(Resource):
         device.protocol = data["protocol"]
         device.command = data["command"]
         pdb.session.commit()
+        log.log_crud(info="Put", table_name="Device Type")
         return jsonify(
             {
                 "id": device.id,
@@ -89,4 +97,5 @@ class DeviceTypeResource(Resource):
         device = DeviceType.query.get_or_404(id)
         pdb.session.delete(device)
         pdb.session.commit()
+        log.log_crud(info="Delete", table_name="Device Type")
         return "", 204

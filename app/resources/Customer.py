@@ -1,7 +1,9 @@
 from flask_restx import Resource, fields, Namespace
 from app import api, pdb
 from app.Models import Customer
+from app.Models.ModelsLogging import Logger
 from flask import request, jsonify
+
 
 api_customer = Namespace("Customers", description="Operations related to Customers")
 
@@ -17,11 +19,15 @@ customer_model = api_customer.model(
     },
 )
 
+log = Logger()
+
 
 @api_customer.route("/customers")
 class CustomerList(Resource):
     def get(self):
+
         customers = Customer.query.all()
+        log.log_crud(info="Get", table_name="Customers")
         return jsonify(
             [
                 {
@@ -38,6 +44,7 @@ class CustomerList(Resource):
 
     @api_customer.expect(customer_model)
     def post(self):
+
         data = request.json
         yeni_Customer = Customer(
             name=data["name"],
@@ -48,6 +55,7 @@ class CustomerList(Resource):
         )
         pdb.session.add(yeni_Customer)
         pdb.session.commit()
+        log.log_crud(info="Post", table_name="Customers")
         return jsonify(
             {
                 "id": yeni_Customer.id,
@@ -64,41 +72,47 @@ class CustomerList(Resource):
 @api_customer.route("/customers/<int:id>")
 class CustomerResource(Resource):
     def get(self, id):
-        musteri = Customer.query.get_or_404(id)
+
+        customer = Customer.query.get_or_404(id)
+        log.log_crud(info="Get", table_name=f"Customers {id}")
         return jsonify(
             {
-                "id": musteri.id,
-                "name": musteri.name,
-                "firstName": musteri.firstName,
-                "mail": musteri.mail,
-                "phoneNumber": musteri.phoneNumber,
-                "address": musteri.address,
+                "id": customer.id,
+                "name": customer.name,
+                "firstName": customer.firstName,
+                "mail": customer.mail,
+                "phoneNumber": customer.phoneNumber,
+                "address": customer.address,
             }
         )
 
     @api_customer.expect(customer_model)
     def put(self, id):
+
         data = request.json
-        musteri = Customer.query.get_or_404(id)
-        musteri.name = data["name"]
-        musteri.firstName = data["firstName"]
-        musteri.mail = data["mail"]
-        musteri.phoneNumber = data["phoneNumber"]
-        musteri.address = data["address"]
+        customer = Customer.query.get_or_404(id)
+        customer.name = data["name"]
+        customer.firstName = data["firstName"]
+        customer.mail = data["mail"]
+        customer.phoneNumber = data["phoneNumber"]
+        customer.address = data["address"]
         pdb.session.commit()
+        log.log_crud(info="Put", table_name=f"Customers {id}")
         return jsonify(
             {
-                "id": musteri.id,
-                "name": musteri.name,
-                "firstName": musteri.firstName,
-                "mail": musteri.mail,
-                "phoneNumber": musteri.phoneNumber,
-                "address": musteri.address,
+                "id": customer.id,
+                "name": customer.name,
+                "firstName": customer.firstName,
+                "mail": customer.mail,
+                "phoneNumber": customer.phoneNumber,
+                "address": customer.address,
             }
         )
 
     def delete(self, id):
-        musteri = Customer.query.get_or_404(id)
-        pdb.session.delete(musteri)
+
+        customer = Customer.query.get_or_404(id)
+        pdb.session.delete(customer)
         pdb.session.commit()
+        log.log_crud(info="Delete", table_name=f"Customers {id}")
         return "", 204

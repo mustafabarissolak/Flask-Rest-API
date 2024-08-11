@@ -9,7 +9,7 @@ api = Api()
 
 
 def create_app():
-    
+
     app = Flask(__name__)
     app.config.from_object("app.config.PostgresqlConfig")
 
@@ -18,11 +18,11 @@ def create_app():
     api.init_app(app)
 
     with app.app_context():
-        from app.View.Customer import api_customer
-        from app.View.User import api_users
-        from app.View.DeviceType import api_device_type
-        from app.View.CustomerDevice import api_customer_device
-        from app.View.Logger import api_logger
+        from app.resources.Customer import api_customer
+        from app.resources.User import api_users
+        from app.resources.DeviceType import api_device_type
+        from app.resources.CustomerDevice import api_customer_device
+        from app.resources.Logger import api_logger
 
         api.add_namespace(api_customer)
         api.add_namespace(api_users)
