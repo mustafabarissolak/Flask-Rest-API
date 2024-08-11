@@ -1,9 +1,6 @@
 # PostgreSQL Configuration
 class PostgresqlConfig:
-    postgresqlUserName = "your user name"
-    postgresqlPassword = "your password"
-    postgresqlDbName = "your database name "
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{postgresqlUserName}:{postgresqlPassword}@localhost/{postgresqlDbName}"
+    SQLALCHEMY_DATABASE_URI = "postgresql://postgres:1234@localhost/swagger"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
@@ -15,8 +12,6 @@ client = MongoClient(mongo_url)
 mdb = client["swaggerLogs"]
 
 # MongoDB Collections
-application_logs = mdb["application_logs"]
+user_logs = mdb["user_logs"]
+crud_logs = mdb["crud_logs"]
 error_logs = mdb["error_logs"]
-access_logs = mdb["access_logs"]
-activity_logs = mdb["activity_logs"]
-system_logs = mdb["system_logs"]
