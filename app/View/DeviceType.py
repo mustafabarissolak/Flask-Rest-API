@@ -22,7 +22,6 @@ device_type_model = api_device_type.model(
 class DeviceTypeList(Resource):
     def get(self):
         deviceTypes = DeviceType.query.all()
-        # logger("get", "DeviceType")
         return jsonify(
             [
                 {
@@ -45,7 +44,6 @@ class DeviceTypeList(Resource):
         )
         pdb.session.add(new_device_type)
         pdb.session.commit()
-        # logger("post", "DeviceType")
         return jsonify(
             {
                 "id": new_device_type.id,
@@ -61,7 +59,6 @@ class DeviceTypeList(Resource):
 class DeviceTypeResource(Resource):
     def get(self, id):
         device = DeviceType.query.get_or_404(id)
-        # logger("get", f"DeviceType, Id:{id}")
         return jsonify(
             {
                 "id": device.id,
@@ -79,7 +76,6 @@ class DeviceTypeResource(Resource):
         device.protocol = data["protocol"]
         device.command = data["command"]
         pdb.session.commit()
-        # logger("put", f"DeviceType, Id:{id}")
         return jsonify(
             {
                 "id": device.id,
@@ -93,5 +89,4 @@ class DeviceTypeResource(Resource):
         device = DeviceType.query.get_or_404(id)
         pdb.session.delete(device)
         pdb.session.commit()
-        # logger("delete", f"DeviceType, Id:{id}")
         return "", 204

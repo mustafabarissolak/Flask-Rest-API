@@ -17,7 +17,6 @@ def create_app():
     migrate.init_app(app, pdb)
     api.init_app(app)
 
-    # Namespace'leri ekleyin
     with app.app_context():
         from app.View.Customer import api_customer
         from app.View.User import api_users

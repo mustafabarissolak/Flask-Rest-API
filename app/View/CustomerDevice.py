@@ -4,7 +4,9 @@ from app import pdb
 from app.Models import CustomerDevice
 
 # Veri modeli tanımı
-api_customer_device = Namespace("Customer Devices", description="Operations related to Customer Devices")
+api_customer_device = Namespace(
+    "Customer Devices", description="Operations related to Customer Devices"
+)
 
 customer_device_model = api_customer_device.model(
     "CustomerDevice",
@@ -22,10 +24,8 @@ customer_device_model = api_customer_device.model(
 
 @api_customer_device.route("/customer_devices")
 class CustomerDeviceList(Resource):
-    # Tüm müşteri cihazlarını al
     def get(self):
         customer_devices = CustomerDevice.query.all()
-        # logger("get", "CustomerDevice")
         return jsonify(
             [
                 {
@@ -39,7 +39,6 @@ class CustomerDeviceList(Resource):
             ]
         )
 
-    # Yeni müşteri cihazı ekle
     @api_customer_device.expect(customer_device_model)
     def post(self):
         data = request.json
@@ -51,7 +50,6 @@ class CustomerDeviceList(Resource):
         )
         pdb.session.add(new_device)
         pdb.session.commit()
-        # logger("post", "CustomerDevice")
         return jsonify(
             {
                 "id": new_device.id,
@@ -65,10 +63,8 @@ class CustomerDeviceList(Resource):
 
 @api_customer_device.route("/customer_devices/<int:id>")
 class CustomerDeviceResource(Resource):
-    # Belirli bir müşteri cihazı bilgilerini al
     def get(self, id):
         device = CustomerDevice.query.get_or_404(id)
-        # logger("get", f"CustomerDevice, Id:{id}")
         return jsonify(
             {
                 "id": device.id,
@@ -79,7 +75,6 @@ class CustomerDeviceResource(Resource):
             }
         )
 
-    # Belirli bir müşteri cihazı bilgilerini güncelle
     @api_customer_device.expect(customer_device_model)
     def put(self, id):
         data = request.json
@@ -89,7 +84,6 @@ class CustomerDeviceResource(Resource):
         device.port = data["port"]
         device.ipHost = data["ipHost"]
         pdb.session.commit()
-        # logger("put", f"CustomerDevice, Id:{id}")
         return jsonify(
             {
                 "id": device.id,
@@ -100,10 +94,8 @@ class CustomerDeviceResource(Resource):
             }
         )
 
-    # Belirli bir müşteri cihazı sil
     def delete(self, id):
         device = CustomerDevice.query.get_or_404(id)
         pdb.session.delete(device)
         pdb.session.commit()
-        # logger("delete", f"CustomerDevice, Id:{id}")
         return "", 204

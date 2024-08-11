@@ -22,7 +22,6 @@ customer_model = api_customer.model(
 class CustomerList(Resource):
     def get(self):
         customers = Customer.query.all()
-        # logger("get", "Customer")
         return jsonify(
             [
                 {
@@ -49,7 +48,6 @@ class CustomerList(Resource):
         )
         pdb.session.add(yeni_Customer)
         pdb.session.commit()
-        # logger("get", "Customer")
         return jsonify(
             {
                 "id": yeni_Customer.id,
@@ -67,7 +65,6 @@ class CustomerList(Resource):
 class CustomerResource(Resource):
     def get(self, id):
         musteri = Customer.query.get_or_404(id)
-        # logger("get", f"Cutomer Id: {id}")
         return jsonify(
             {
                 "id": musteri.id,
@@ -89,7 +86,6 @@ class CustomerResource(Resource):
         musteri.phoneNumber = data["phoneNumber"]
         musteri.address = data["address"]
         pdb.session.commit()
-        # logger("put", f"Customer Id: {id}")
         return jsonify(
             {
                 "id": musteri.id,
@@ -105,5 +101,4 @@ class CustomerResource(Resource):
         musteri = Customer.query.get_or_404(id)
         pdb.session.delete(musteri)
         pdb.session.commit()
-        # logger("delete", f"Customer Id: {id}")
         return "", 204
