@@ -5,21 +5,16 @@ from app.Models import CustomerDevice
 from app.Models.ModelsLogging import Logger
 
 
-# Veri modeli tanımı
-api_customer_device = Namespace(
-    "Customer Devices", description="Operations related to Customer Devices"
-)
+api_customer_device = Namespace("Customer Devices")
 
 customer_device_model = api_customer_device.model(
     "CustomerDevice",
     {
-        "id": fields.Integer(readonly=True, description="Customer Device ID"),
-        "customerId": fields.Integer(required=True, description="Customer ID"),
-        "deviceTypeId": fields.Integer(required=True, description="Device Type ID"),
-        "port": fields.String(required=True, description="Device Port"),
-        "ipHost": fields.String(
-            required=True, description="Device IP Address or Hostname"
-        ),
+        "id": fields.Integer(readonly=True),
+        "customerId": fields.Integer(required=True),
+        "deviceTypeId": fields.Integer(required=True),
+        "port": fields.String(required=True),
+        "ipHost": fields.String(required=True),
     },
 )
 log = Logger()
@@ -40,7 +35,8 @@ class CustomerDeviceList(Resource):
                     "ipHost": device.ipHost,
                 }
                 for device in customer_devices
-            ]
+            ],
+            {"code": 200},
         )
 
     @api_customer_device.expect(customer_device_model)
@@ -62,7 +58,8 @@ class CustomerDeviceList(Resource):
                 "deviceTypeId": new_device.deviceTypeId,
                 "port": new_device.port,
                 "ipHost": new_device.ipHost,
-            }
+            },
+            {"code": 200},
         )
 
 
@@ -78,7 +75,8 @@ class CustomerDeviceResource(Resource):
                 "deviceTypeId": device.deviceTypeId,
                 "port": device.port,
                 "ipHost": device.ipHost,
-            }
+            },
+            {"code": 200},
         )
 
     @api_customer_device.expect(customer_device_model)
@@ -98,7 +96,8 @@ class CustomerDeviceResource(Resource):
                 "deviceTypeId": device.deviceTypeId,
                 "port": device.port,
                 "ipHost": device.ipHost,
-            }
+            },
+            {"code": 200},
         )
 
     def delete(self, id):
@@ -106,4 +105,7 @@ class CustomerDeviceResource(Resource):
         pdb.session.delete(device)
         pdb.session.commit()
         log.log_crud(info="Delete", table_name=f"Customer Devices {id}")
-        return "", 204
+        return jsonify(
+            {"delete": id},
+            {"code": 200},
+        )

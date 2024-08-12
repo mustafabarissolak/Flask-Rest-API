@@ -5,17 +5,15 @@ from app.Models import DeviceType
 from app.Models.ModelsLogging import Logger
 
 
-api_device_type = Namespace(
-    "Device Type", description="Operations related to Device Type"
-)
+api_device_type = Namespace("Device Type")
 
 device_type_model = api_device_type.model(
     "DeviceType",
     {
-        "id": fields.Integer(readonly=True, description="Device Type ID"),
-        "deviceType": fields.String(required=True, description="Device Type Name"),
-        "protocol": fields.String(required=True, description="Device Protocol"),
-        "command": fields.String(required=True, description="Device Commands"),
+        "id": fields.Integer(readonly=True),
+        "deviceType": fields.String(required=True),
+        "protocol": fields.String(required=True),
+        "command": fields.String(required=True),
     },
 )
 
@@ -36,7 +34,8 @@ class DeviceTypeList(Resource):
                     "command": device.command,
                 }
                 for device in deviceTypes
-            ]
+            ],
+            {"code": 200},
         )
 
     @api_device_type.expect(device_type_model)
@@ -57,7 +56,7 @@ class DeviceTypeList(Resource):
                 "protocol": new_device_type.protocol,
                 "command": new_device_type.command,
             },
-            {"Code": 201},
+            {"Code": 200},
         )
 
 
@@ -72,7 +71,8 @@ class DeviceTypeResource(Resource):
                 "deviceType": device.deviceType,
                 "protocol": device.protocol,
                 "command": device.command,
-            }
+            },
+            {"code": 200},
         )
 
     @api_device_type.expect(device_type_model)
@@ -90,7 +90,8 @@ class DeviceTypeResource(Resource):
                 "deviceType": device.deviceType,
                 "protocol": device.protocol,
                 "command": device.command,
-            }
+            },
+            {"code": 200},
         )
 
     def delete(self, id):
@@ -98,4 +99,7 @@ class DeviceTypeResource(Resource):
         pdb.session.delete(device)
         pdb.session.commit()
         log.log_crud(info="Delete", table_name="Device Type")
-        return "", 204
+        return jsonify(
+            {"delete": id},
+            {"code": 200},
+        )

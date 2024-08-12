@@ -1,21 +1,21 @@
 from flask_restx import Resource, fields, Namespace
-from app import api, pdb
+from app import pdb
 from app.Models import Customer
 from app.Models.ModelsLogging import Logger
 from flask import request, jsonify
 
 
-api_customer = Namespace("Customers", description="Operations related to Customers")
+api_customer = Namespace("Customers")
 
 customer_model = api_customer.model(
     "Customer",
     {
-        "id": fields.Integer(readonly=True, description="Customer id"),
-        "name": fields.String(required=True, description="Customer name"),
-        "firstName": fields.String(required=True, description="Customer firstName"),
-        "mail": fields.String(required=True, description="Customer mail"),
-        "phoneNumber": fields.String(required=True, description="Customer Phone"),
-        "address": fields.String(required=True, description="Customer address"),
+        "id": fields.Integer(readonly=True),
+        "name": fields.String(required=True),
+        "firstName": fields.String(required=True),
+        "mail": fields.String(required=True),
+        "phoneNumber": fields.String(required=True),
+        "address": fields.String(required=True),
     },
 )
 
@@ -39,7 +39,8 @@ class CustomerList(Resource):
                     "address": customer.address,
                 }
                 for customer in customers
-            ]
+            ],
+            {"code": 200},
         )
 
     @api_customer.expect(customer_model)
@@ -83,7 +84,8 @@ class CustomerResource(Resource):
                 "mail": customer.mail,
                 "phoneNumber": customer.phoneNumber,
                 "address": customer.address,
-            }
+            },
+            {"code": 200},
         )
 
     @api_customer.expect(customer_model)
@@ -106,7 +108,8 @@ class CustomerResource(Resource):
                 "mail": customer.mail,
                 "phoneNumber": customer.phoneNumber,
                 "address": customer.address,
-            }
+            },
+            {"code": 200},
         )
 
     def delete(self, id):
@@ -115,4 +118,7 @@ class CustomerResource(Resource):
         pdb.session.delete(customer)
         pdb.session.commit()
         log.log_crud(info="Delete", table_name=f"Customers {id}")
-        return "", 204
+        return jsonify(
+            {"delete": id},
+            {"code": 200},
+        )

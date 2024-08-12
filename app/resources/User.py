@@ -4,14 +4,14 @@ from app.Models.ModelsUser import Users
 from app.Models.ModelsLogging import Logger
 
 
-api_users = Namespace("Users", description="Operations related to Users")
+api_users = Namespace("Users")
 
 users_model = api_users.model(
     "Users",
     {
-        "id": fields.Integer(readonly=True, description="User Id"),
-        "user_name": fields.String(required=True, description="User username"),
-        "password": fields.String(required=True, description="User password"),
+        "id": fields.Integer(readonly=True),
+        "user_name": fields.String(required=True),
+        "password": fields.String(required=True),
     },
 )
 
@@ -41,7 +41,7 @@ class UserLogin(Resource):
                     log.log_users(f"{login_user_name} is login! ")
                     return jsonify(
                         {"message": f"{login_user_name} is login"},
-                        {"code": 201},
+                        {"code": 200},
                     )
                 else:
                     log.log_users(f"{login_user_name} already logged in!")
@@ -55,9 +55,10 @@ class UserLogin(Resource):
                         {"login_error": "Invalid credentials"},
                         {"user_name": login_user_name},
                         {"password": login_user_password},
+                        {"code": 404},
                     )
                 )
-                return jsonify({"error": "Invalid credentials!"}, {"code": 401})
+                return jsonify({"error": "Invalid credentials!"}, {"code": 404})
 
         except Exception as e:
             log.log_error(e)
@@ -94,11 +95,13 @@ class UserLogout(Resource):
                     )
             else:
                 log.log_error({"logout_error": "Invalid credentials"})
-                return jsonify(
-                    {"error": "Invalid credentials"},
+                return (
+                    jsonify(
+                        {"error": "Invalid credentials"},
+                    ),
                     {"code": 401},
                 )
 
         except Exception as e:
             log.log_error(e)
-            return jsonify({"error": e})
+            return {"error": e}
