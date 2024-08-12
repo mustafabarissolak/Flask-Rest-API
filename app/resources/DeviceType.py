@@ -3,10 +3,6 @@ from flask_restx import Resource, fields, Namespace
 from app import pdb
 from app.Models import DeviceType
 from app.Models.ModelsLogging import Logger
-<<<<<<< HEAD
-=======
-
->>>>>>> d41db3ffc0964435eebb9f199e89c9e928a36d33
 
 
 api_device_type = Namespace("Device Type")
@@ -103,11 +99,8 @@ class DeviceTypeResource(Resource):
         pdb.session.delete(device)
         pdb.session.commit()
         log.log_crud(info="Delete", table_name="Device Type")
-<<<<<<< HEAD
+
         return jsonify(
             {"delete": id},
             {"code": 200},
         )
-=======
-        return "", 204
->>>>>>> d41db3ffc0964435eebb9f199e89c9e928a36d33

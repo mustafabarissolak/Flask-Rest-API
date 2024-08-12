@@ -5,11 +5,7 @@ from app.Models.ModelsLogging import Logger
 from flask import request, jsonify
 
 
-<<<<<<< HEAD
 api_customer = Namespace("Customers")
-=======
-api_customer = Namespace("Customers", description="Operations related to Customers")
->>>>>>> d41db3ffc0964435eebb9f199e89c9e928a36d33
 
 customer_model = api_customer.model(
     "Customer",
@@ -88,12 +84,8 @@ class CustomerResource(Resource):
                 "mail": customer.mail,
                 "phoneNumber": customer.phoneNumber,
                 "address": customer.address,
-<<<<<<< HEAD
             },
             {"code": 200},
-=======
-            }
->>>>>>> d41db3ffc0964435eebb9f199e89c9e928a36d33
         )
 
     @api_customer.expect(customer_model)
@@ -116,12 +108,8 @@ class CustomerResource(Resource):
                 "mail": customer.mail,
                 "phoneNumber": customer.phoneNumber,
                 "address": customer.address,
-<<<<<<< HEAD
             },
             {"code": 200},
-=======
-            }
->>>>>>> d41db3ffc0964435eebb9f199e89c9e928a36d33
         )
 
     def delete(self, id):
@@ -130,11 +118,7 @@ class CustomerResource(Resource):
         pdb.session.delete(customer)
         pdb.session.commit()
         log.log_crud(info="Delete", table_name=f"Customers {id}")
-<<<<<<< HEAD
         return jsonify(
             {"delete": id},
             {"code": 200},
         )
-=======
-        return "", 204
->>>>>>> d41db3ffc0964435eebb9f199e89c9e928a36d33
