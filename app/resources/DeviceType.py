@@ -5,7 +5,7 @@ from app.Models import DeviceType
 from app.Models.ModelsLogging import Logger
 
 
-api_device_type = Namespace("Device Type")
+api_device_type = Namespace("device_types")
 
 device_type_model = api_device_type.model(
     "DeviceType",
@@ -20,7 +20,7 @@ device_type_model = api_device_type.model(
 log = Logger()
 
 
-@api_device_type.route("/device_types")
+@api_device_type.route("/device_type")
 class DeviceTypeList(Resource):
     def get(self):
         deviceTypes = DeviceType.query.all()
@@ -60,7 +60,7 @@ class DeviceTypeList(Resource):
         )
 
 
-@api_device_type.route("/device_types/<int:id>")
+@api_device_type.route("/device_type/<int:id>")
 class DeviceTypeResource(Resource):
     def get(self, id):
         device = DeviceType.query.get_or_404(id)

@@ -5,14 +5,14 @@ from app.Models.ModelsLogging import Logger
 from flask import request, jsonify
 
 
-api_customer = Namespace("Customers")
+api_customer = Namespace("customers")
 
 customer_model = api_customer.model(
     "Customer",
     {
         "id": fields.Integer(readonly=True),
-        "name": fields.String(required=True),
         "firstName": fields.String(required=True),
+        "lastName": fields.String(required=True),
         "mail": fields.String(required=True),
         "phoneNumber": fields.String(required=True),
         "address": fields.String(required=True),
@@ -22,7 +22,7 @@ customer_model = api_customer.model(
 log = Logger()
 
 
-@api_customer.route("/customers")
+@api_customer.route("/customer")
 class CustomerList(Resource):
     def get(self):
 
@@ -32,8 +32,8 @@ class CustomerList(Resource):
             [
                 {
                     "id": customer.id,
-                    "name": customer.name,
                     "firstName": customer.firstName,
+                    "lastName": customer.lastName,
                     "mail": customer.mail,
                     "phoneNumber": customer.phoneNumber,
                     "address": customer.address,
@@ -47,30 +47,30 @@ class CustomerList(Resource):
     def post(self):
 
         data = request.json
-        yeni_Customer = Customer(
-            name=data["name"],
+        new_customer = Customer(
             firstName=data["firstName"],
+            lastName=data["lastName"],
             mail=data["mail"],
             phoneNumber=data["phoneNumber"],
             address=data["address"],
         )
-        pdb.session.add(yeni_Customer)
+        pdb.session.add(new_customer)
         pdb.session.commit()
         log.log_crud(info="Post", table_name="Customers")
         return jsonify(
             {
-                "id": yeni_Customer.id,
-                "name": yeni_Customer.name,
-                "firstName": yeni_Customer.firstName,
-                "mail": yeni_Customer.mail,
-                "phoneNumber": yeni_Customer.phoneNumber,
-                "address": yeni_Customer.address,
+                "id": new_customer.id,
+                "firstName": new_customer.firstName,
+                "lastName": new_customer.lastName,
+                "mail": new_customer.mail,
+                "phoneNumber": new_customer.phoneNumber,
+                "address": new_customer.address,
             },
             {"Code": 201},
         )
 
 
-@api_customer.route("/customers/<int:id>")
+@api_customer.route("/customer/<int:id>")
 class CustomerResource(Resource):
     def get(self, id):
 
@@ -79,8 +79,8 @@ class CustomerResource(Resource):
         return jsonify(
             {
                 "id": customer.id,
-                "name": customer.name,
                 "firstName": customer.firstName,
+                "lastName": customer.lastName,
                 "mail": customer.mail,
                 "phoneNumber": customer.phoneNumber,
                 "address": customer.address,
@@ -93,8 +93,8 @@ class CustomerResource(Resource):
 
         data = request.json
         customer = Customer.query.get_or_404(id)
-        customer.name = data["name"]
         customer.firstName = data["firstName"]
+        customer.lastName = data["lastName"]
         customer.mail = data["mail"]
         customer.phoneNumber = data["phoneNumber"]
         customer.address = data["address"]
@@ -103,8 +103,8 @@ class CustomerResource(Resource):
         return jsonify(
             {
                 "id": customer.id,
-                "name": customer.name,
                 "firstName": customer.firstName,
+                "lastName": customer.lastName,
                 "mail": customer.mail,
                 "phoneNumber": customer.phoneNumber,
                 "address": customer.address,

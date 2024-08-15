@@ -6,14 +6,14 @@ class Logger:
 
     def log_users(self, info):
         log_entry = {
-            "DATETIME": datetime.now(timezone.utc),
+            "DATETIME": datetime.now(),
             "USER info": info,
         }
         user_logs.insert_one(log_entry)
 
     def log_crud(self, info, table_name):
         log_entry = {
-            "DATETIME": datetime.now(timezone.utc),
+            "DATETIME": datetime.now(),
             "CRUD info": info,
             "TABLE name": table_name,
         }
@@ -21,7 +21,7 @@ class Logger:
 
     def log_error(self, info):
         log_enty = {
-            "DATETIME": datetime.now(timezone.utc),
+            "DATETIME": datetime.now(),
             "ERROR": info,
         }
         error_logs.insert_one(log_enty)

@@ -4,10 +4,10 @@ import json
 from app.Models.ModelsLogging import crud_logs, user_logs, error_logs
 
 
-api_logger = Namespace("Logs")
+api_logger = Namespace("logs")
 
 
-@api_logger.route("/user_logs")
+@api_logger.route("/user_log")
 class UserDataResource(Resource):
     def get(self):
         documents = user_logs.find()
@@ -15,7 +15,7 @@ class UserDataResource(Resource):
         return jsonify(result, {"code": 200})
 
 
-@api_logger.route("/crud_logs")
+@api_logger.route("/crud_log")
 class CrudDataResource(Resource):
     def get(self):
         documents = crud_logs.find()
@@ -23,7 +23,7 @@ class CrudDataResource(Resource):
         return jsonify(result, {"code": 200})
 
 
-@api_logger.route("/error_logs")
+@api_logger.route("/error_log")
 class ErrorDataResource(Resource):
     def get(self):
         documents = error_logs.find()

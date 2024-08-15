@@ -5,7 +5,7 @@ from app.Models import CustomerDevice
 from app.Models.ModelsLogging import Logger
 
 
-api_customer_device = Namespace("Customer Devices")
+api_customer_device = Namespace("customer_devices")
 
 customer_device_model = api_customer_device.model(
     "CustomerDevice",
@@ -20,7 +20,7 @@ customer_device_model = api_customer_device.model(
 log = Logger()
 
 
-@api_customer_device.route("/customer_devices")
+@api_customer_device.route("/customer_device")
 class CustomerDeviceList(Resource):
     def get(self):
         customer_devices = CustomerDevice.query.all()
@@ -63,7 +63,7 @@ class CustomerDeviceList(Resource):
         )
 
 
-@api_customer_device.route("/customer_devices/<int:id>")
+@api_customer_device.route("/customer_device/<int:id>")
 class CustomerDeviceResource(Resource):
     def get(self, id):
         device = CustomerDevice.query.get_or_404(id)
