@@ -25,7 +25,6 @@ log = Logger()
 @api_customer.route("/customer")
 class CustomerList(Resource):
     def get(self):
-
         customers = Customer.query.all()
         log.log_crud(info="Get", table_name="Customers")
         return jsonify(
@@ -45,7 +44,6 @@ class CustomerList(Resource):
 
     @api_customer.expect(customer_model)
     def post(self):
-
         data = request.json
         new_customer = Customer(
             firstName=data["firstName"],
@@ -73,7 +71,6 @@ class CustomerList(Resource):
 @api_customer.route("/customer/<int:id>")
 class CustomerResource(Resource):
     def get(self, id):
-
         customer = Customer.query.get_or_404(id)
         log.log_crud(info="Get", table_name=f"Customers {id}")
         return jsonify(
@@ -90,7 +87,6 @@ class CustomerResource(Resource):
 
     @api_customer.expect(customer_model)
     def put(self, id):
-
         data = request.json
         customer = Customer.query.get_or_404(id)
         customer.firstName = data["firstName"]
@@ -113,7 +109,6 @@ class CustomerResource(Resource):
         )
 
     def delete(self, id):
-
         customer = Customer.query.get_or_404(id)
         pdb.session.delete(customer)
         pdb.session.commit()
