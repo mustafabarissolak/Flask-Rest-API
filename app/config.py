@@ -3,8 +3,6 @@ class PostgresqlConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
-
-
 from pymongo import MongoClient
 
 mongo_url = "mongodb://localhost:27017/"
