@@ -5,16 +5,18 @@ from flask_migrate import Migrate
 
 pdb = SQLAlchemy()
 migrate = Migrate()
-api = Api()
 
 
 def create_app():
     app = Flask(__name__, template_folder="templates")
     app.config.from_object("app.config.PostgresqlConfig")
+    authorizations = {
+        "apikey": {"type": "apiKey", "in": "header", "name": "Authorization"}
+    }
+    api = Api(app, security="apikey", authorizations=authorizations)
 
     pdb.init_app(app)
     migrate.init_app(app, pdb)
-    api.init_app(app)
 
     with app.app_context():
         from app.resources.User import api_users

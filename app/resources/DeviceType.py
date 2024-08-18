@@ -3,6 +3,7 @@ from flask_restx import Resource, fields, Namespace
 from app import pdb
 from app.Models import DeviceType
 from app.Models.ModelsLogging import Logger
+from app.Models.ModelsToken import token_required
 
 
 api_device_type = Namespace("device_types")
@@ -22,7 +23,9 @@ log = Logger()
 
 @api_device_type.route("/device_type")
 class DeviceTypeList(Resource):
-    def get(self):
+    @api_device_type.doc(security="apikey")
+    @token_required
+    def get(self, user_id):
         deviceTypes = DeviceType.query.all()
         log.log_crud(info="Get", table_name="Device Type")
         return jsonify(
@@ -35,11 +38,16 @@ class DeviceTypeList(Resource):
                 }
                 for device in deviceTypes
             ],
-            {"code": 200},
+            {
+                "code": 200,
+                "user id": user_id,
+            },
         )
 
+    @api_device_type.doc(security="apikey")
     @api_device_type.expect(device_type_model)
-    def post(self):
+    @token_required
+    def post(self, user_id):
         data = request.json
         new_device_type = DeviceType(
             deviceType=data["deviceType"],
@@ -56,13 +64,18 @@ class DeviceTypeList(Resource):
                 "protocol": new_device_type.protocol,
                 "command": new_device_type.command,
             },
-            {"Code": 200},
+            {
+                "Code": 200,
+                "user id": user_id,
+            },
         )
 
 
 @api_device_type.route("/device_type/<int:id>")
 class DeviceTypeResource(Resource):
-    def get(self, id):
+    @api_device_type.doc(security="apikey")
+    @token_required
+    def get(self, id, user_id):
         device = DeviceType.query.get_or_404(id)
         log.log_crud(info="Get", table_name="Device Type")
         return jsonify(
@@ -72,11 +85,16 @@ class DeviceTypeResource(Resource):
                 "protocol": device.protocol,
                 "command": device.command,
             },
-            {"code": 200},
+            {
+                "code": 200,
+                "user id": user_id,
+            },
         )
 
+    @api_device_type.doc(security="apikey")
     @api_device_type.expect(device_type_model)
-    def put(self, id):
+    @token_required
+    def put(self, id, user_id):
         data = request.json
         device = DeviceType.query.get_or_404(id)
         device.deviceType = data["deviceType"]
@@ -91,10 +109,15 @@ class DeviceTypeResource(Resource):
                 "protocol": device.protocol,
                 "command": device.command,
             },
-            {"code": 200},
+            {
+                "code": 200,
+                "user id": user_id,
+            },
         )
 
-    def delete(self, id):
+    @api_device_type.doc(security="apikey")
+    @token_required
+    def delete(self, id, user_id):
         device = DeviceType.query.get_or_404(id)
         pdb.session.delete(device)
         pdb.session.commit()
@@ -102,5 +125,8 @@ class DeviceTypeResource(Resource):
 
         return jsonify(
             {"delete": id},
-            {"code": 200},
+            {
+                "code": 200,
+                "user id": user_id,
+            },
         )
